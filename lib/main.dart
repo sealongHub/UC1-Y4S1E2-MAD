@@ -7,11 +7,16 @@ import 'package:mad/screen/startup_screen.dart';
 import 'package:mad/widgets/app_color.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'data/file_storage_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize SQLite for Windows/Desktop
+  sqfliteFfiInit();
+  databaseFactory = databaseFactoryFfi;
 
   // Sqflite DB
   await DbManager.instance.database;
@@ -19,7 +24,9 @@ void main() async {
   // File Storage
   final fileStorageManager = FileStorageManager();
   await fileStorageManager.initFileStorage();
+
   // await fileStorageManager.saveFileStorage();
+
   await fileStorageManager.readFileStorage();
 
   runApp(const App());
@@ -33,17 +40,9 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'MAD',
       theme: ThemeData(
-        // fontFamily: 'NotoSansKhmer',
-        // fontFamily: 'Hanuman',
-        // fontFamily: 'KantumruyPro',
-        colorScheme: ColorScheme.fromSeed(seedColor: app_background),
-        // primarySwatch: ColorScheme.fromSeed(seedColor: Colors.green),
-        // Google Font
-        // textTheme: TextTheme(
-        //   labelLarge: GoogleFonts.notoSansKhmer(),
-        //   labelMedium: GoogleFonts.notoSansKhmer(),
-        //   labelSmall: GoogleFonts.notoSansKhmer(),
-        // ),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: app_background,
+        ),
       ),
       home: StartupScreen(),
     );

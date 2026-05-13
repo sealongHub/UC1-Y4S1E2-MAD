@@ -34,23 +34,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     final _keyForm = GlobalKey<FormState>();
 
-    Future<void> _onRegisterSubmitHandler() async{
-      print("Full Name ${fullNameController.text}");
-      print("Email  : ${emailController.text}");
-      print("Password : ${passwordController.text}");
+    Future<void> _onRegisterSubmitHandler() async {
 
-      if(_keyForm.currentState!.validate()){
-        String fullName = fullNameController.text;
-        String user = emailController.text;
-        String pass = passwordController.text;
-        // Can submit to Backend API.
+      if (_keyForm.currentState!.validate()) {
+
+        String fullName = fullNameController.text.trim();
+        String user = emailController.text.trim();
+        String pass = passwordController.text.trim();
+
+        // Save to SharedPreferences
         final pref = await SharedPreferences.getInstance();
+
         await pref.setString("fullName", fullName);
         await pref.setString("username", user);
         await pref.setString("password", pass);
+
         print("Register success...");
-        // final route = MaterialPageRoute(builder: (BuildContext context) => MainScreen());
-        // Navigator.pushReplacement(context, route);
+
+        // Go to Main Screen
+        final route = MaterialPageRoute(
+          builder: (BuildContext context) => MainScreen(),
+        );
+
+        Navigator.pushReplacement(context, route);
       }
     }
 
@@ -64,18 +70,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
 
       final fullNameTextField = Padding(
-          padding: EdgeInsets.all(8),
-          child: TextFormField(
-            controller: fullNameController,
-            decoration: InputDecoration(
-                prefixIcon: Icon(Icons.account_circle),
-                suffixIcon: Icon(Icons.check_circle, color: Colors.green,),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30)
-                ),
-                hintText: "Full Name"
+        padding: EdgeInsets.all(8),
+        child: TextFormField(
+          controller: fullNameController,
+          decoration: InputDecoration(
+            prefixIcon: Icon(Icons.account_circle),
+            suffixIcon: Icon(
+              Icons.check_circle,
+              color: Colors.green,
             ),
-          )
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            hintText: "Full Name",
+          ),
+          validator: (v) {
+            if (v == null || v.isEmpty) {
+              return "Full name could not be blank.";
+            }
+            return null;
+          },
+        ),
       );
 
 
@@ -92,10 +107,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 hintText: "Email"
             ),
-            validator: (v){
-              if(v!.isEmpty){
+            validator: (v) {
+              if (v == null || v.isEmpty) {
                 return "Email could not be blank.";
               }
+
+              if (!v.contains("@")) {
+                return "Invalid email.";
+              }
+
               return null;
             },
           )
@@ -118,10 +138,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               hintText: "Password",
             ),
-            validator: (v){
-              if(v!.isEmpty){
+            validator: (v) {
+              if (v == null || v.isEmpty) {
                 return "Password could not be blank.";
               }
+
+              if (v.length < 6) {
+                return "Password must be at least 6 characters.";
+              }
+
               return null;
             },
           )

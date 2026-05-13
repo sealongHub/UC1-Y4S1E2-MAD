@@ -1,4 +1,3 @@
-
 import 'package:mad/data/db_manager.dart';
 import 'package:mad/model/orders.dart';
 import 'package:sqflite/sqflite.dart';
@@ -11,7 +10,11 @@ class OrderService {
 
   Future<void> insertOrder(Orders order) async {
     final db = await DbManager.instance.database;
-    await db.insert(ordersTable, order.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      ordersTable,
+      order.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<List<Orders>> readOrders() async {
@@ -20,4 +23,22 @@ class OrderService {
     return List.generate(maps.length, (i) => Orders.fromMap(maps[i]));
   }
 
+  Future<void> updateOrder(Orders order) async {
+    final db = await DbManager.instance.database;
+    await db.update(
+      ordersTable,
+      order.toMap(),
+      where: "id = ?",
+      whereArgs: [order.id],
+    );
+  }
+
+  Future<void> deleteOrder(int id) async {
+    final db = await DbManager.instance.database;
+    await db.delete(
+      ordersTable,
+      where: "id = ?",
+      whereArgs: [id],
+    );
+  }
 }

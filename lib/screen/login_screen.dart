@@ -13,66 +13,89 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
   bool _obscureText = true;
   bool _isEmailValid = false;
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  final _keyForm = GlobalKey<FormState>();
+
   void _onEmailChangeHandler(String email) {
+
     if (email.isNotEmpty && email.contains("@")) {
+
       setState(() {
         _isEmailValid = true;
       });
+
     } else {
+
       setState(() {
         _isEmailValid = false;
       });
+
     }
   }
 
-  final _keyForm = GlobalKey<FormState>();
-
   Future<void> _onLoginSubmitHandler() async {
-    print("Email  : ${emailController.text}");
+
+    print("Email : ${emailController.text}");
     print("Password : ${passwordController.text}");
 
     if (_keyForm.currentState!.validate()) {
-      String user = emailController.text;
-      String pass = passwordController.text;
-      // Can submit to Backend API.
+
+      String user = emailController.text.trim();
+      String pass = passwordController.text.trim();
+
       final pref = await SharedPreferences.getInstance();
-      String username = pref.getString("username")!;
-      String password = pref.getString("password")!;
-      if (user == username && pass == password) {
-        print("Login success..");
+
+      // SAFE NULLABLE VARIABLES
+      String? username = pref.getString("username");
+      String? password = pref.getString("password");
+
+      // No account found
+      if (username == null || password == null) {
+
         final snackBar = SnackBar(
-          backgroundColor: Colors.lightBlue,
-          content: Text("Login success"),
-          action: SnackBarAction(
-            label: "Close",
-            onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              final route = MaterialPageRoute(
-                builder: (BuildContext context) => MainScreen(),
-              );
-              Navigator.pushReplacement(context, route);
-            },
-          ),
+          backgroundColor: Colors.red,
+          content: Text("No account found. Please register first."),
         );
+
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      } else {
-        print("Invalid Username or Password");
+
+        return;
+      }
+
+      // Login success
+      if (user == username && pass == password) {
+
+        print("Login success..");
+
         final snackBar = SnackBar(
-          backgroundColor: Colors.lightBlue,
-          content: Text("Invalid Username or Password"),
-          action: SnackBarAction(
-            label: "Close",
-            onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            },
-          ),
+          backgroundColor: Colors.green,
+          content: Text("Login success"),
+          duration: Duration(seconds: 2),
         );
+
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+        await Future.delayed(Duration(seconds: 2));
+
+        final route = MaterialPageRoute(
+          builder: (BuildContext context) => MainScreen(),
+        );
+
+        Navigator.pushReplacement(context, route);
+
+      } else {
+
+        final snackBar = SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("Invalid Username or Password"),
+        );
+
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     }
@@ -80,6 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     final customLogo = SizedBox(
       height: MediaQuery.of(context).size.height * 0.2,
       child: appLogo.logo,
@@ -95,13 +119,21 @@ class _LoginScreenState extends State<LoginScreen> {
           suffixIcon: _isEmailValid
               ? Icon(Icons.check_circle, color: Colors.green)
               : Icon(Icons.check_circle),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
           hintText: "Email",
         ),
         validator: (v) {
-          if (v!.isEmpty) {
+
+          if (v == null || v.isEmpty) {
             return "Email could not be blank.";
           }
+
+          if (!v.contains("@")) {
+            return "Invalid email.";
+          }
+
           return null;
         },
       ),
@@ -116,35 +148,50 @@ class _LoginScreenState extends State<LoginScreen> {
           prefixIcon: Icon(Icons.lock),
           suffixIcon: IconButton(
             onPressed: () {
+
               setState(() {
                 _obscureText = !_obscureText;
               });
+
             },
             icon: _obscureText
                 ? Icon(Icons.visibility_off)
                 : Icon(Icons.visibility),
           ),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
           hintText: "Password",
         ),
         validator: (v) {
-          if (v!.isEmpty) {
+
+          if (v == null || v.isEmpty) {
             return "Password could not be blank.";
           }
+
           return null;
         },
       ),
     );
 
     final loginButton = Padding(
-      padding: EdgeInsets.only(left: 8, right: 8, bottom: 16),
+      padding: EdgeInsets.only(
+        left: 8,
+        right: 8,
+        bottom: 16,
+      ),
       child: SizedBox(
         height: 50,
         width: MediaQuery.of(context).size.width,
         child: ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF3051A0)),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Color(0xFF3051A0),
+          ),
           onPressed: _onLoginSubmitHandler,
-          child: Text("ចូលប្រើ", style: TextStyle(color: Colors.white)),
+          child: Text(
+            "ចូលប្រើ",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
     );
@@ -154,10 +201,14 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         TextButton(
           onPressed: () {
+
             final route = MaterialPageRoute(
-              builder: (BuildContext context) => ForgetPasswordScreen(),
+              builder: (BuildContext context) =>
+                  ForgetPasswordScreen(),
             );
+
             Navigator.push(context, route);
+
           },
           child: Text("ភ្លេចលេខសង្ងាត់"),
         ),
@@ -167,19 +218,27 @@ class _LoginScreenState extends State<LoginScreen> {
     final noAccount = Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+
         Text("មិនមានគណនីទេ?"),
+
         TextButton(
           onPressed: () {
+
             final route = MaterialPageRoute(
-              builder: (BuildContext context) => RegisterScreen(),
+              builder: (BuildContext context) =>
+                  RegisterScreen(),
             );
+
             Navigator.push(context, route);
+
           },
           child: Text(
             "ចុះឈ្មោះ",
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
+        )
       ],
     );
 
@@ -196,9 +255,20 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.facebook, color: Colors.blue, size: 40),
+
+          Icon(
+            Icons.facebook,
+            color: Colors.blue,
+            size: 40,
+          ),
+
           SizedBox(width: 8),
-          Icon(Icons.mail_outlined, color: Colors.red, size: 40),
+
+          Icon(
+            Icons.mail_outlined,
+            color: Colors.red,
+            size: 40,
+          ),
         ],
       ),
     );
@@ -206,32 +276,50 @@ class _LoginScreenState extends State<LoginScreen> {
     final loginForm = Form(
       key: _keyForm,
       child: Column(
-        children: [usernameTextField, passwordTextField, forgetPassword],
+        children: [
+          usernameTextField,
+          passwordTextField,
+          forgetPassword,
+        ],
       ),
     );
 
-    final _skipButton = TextButton(
+    final skipButton = TextButton(
       onPressed: () {
+
         final route = MaterialPageRoute(
           builder: (BuildContext context) => MainScreen(),
         );
+
         Navigator.pushReplacement(context, route);
+
       },
-      child: Text("រំលង", style: TextStyle(color: Colors.blue)),
+      child: Text(
+        "រំលង",
+        style: TextStyle(color: Colors.blue),
+      ),
     );
 
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
+
             customLogo,
+
             loginForm,
+
             loginButton,
+
             noAccount,
+
             orLineWidget,
+
             socialWidget,
+
             SizedBox(height: 40),
-            _skipButton,
+
+            skipButton,
           ],
         ),
       ),

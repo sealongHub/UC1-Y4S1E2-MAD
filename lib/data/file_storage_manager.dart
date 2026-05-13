@@ -27,15 +27,19 @@ class FileStorageManager {
   }
 
   Future<void> readFileStorage() async {
-    final appDocDir =  await getApplicationDocumentsDirectory();
-    String path = appDocDir.path;
-    final file = File('${path}/book.txt');
-    // String data = await file.readAsString();
-    // print("Data : $data");
+  try {
+    final directory = await getApplicationDocumentsDirectory();
 
-    List<String> datas = await file.readAsLines();
-    for(String s in datas){
-      print("Data : $s");
+    final file = File('${directory.path}/book.txt');
+
+    if (await file.exists()) {
+      String content = await file.readAsString();
+      print(content);
+    } else {
+      print("book.txt does not exist");
     }
+  } catch (e) {
+    print(e);
   }
+}
 }
