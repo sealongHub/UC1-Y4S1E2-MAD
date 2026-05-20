@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mad/data/db_manager.dart';
 import 'package:mad/screen/startup_screen.dart';
@@ -22,12 +23,19 @@ void main() async {
   await DbManager.instance.database;
 
   // File Storage
+<<<<<<< HEAD
   final fileStorageManager = FileStorageManager();
   await fileStorageManager.initFileStorage();
 
   // await fileStorageManager.saveFileStorage();
 
   await fileStorageManager.readFileStorage();
+=======
+  // final fileStorageManager = FileStorageManager();
+  // await fileStorageManager.initFileStorage();
+  // await fileStorageManager.saveFileStorage();
+  // await fileStorageManager.readFileStorage();
+>>>>>>> ed7e9763c32da740429a5621e54880dbcbbe51cd
 
   runApp(const App());
 }
@@ -37,7 +45,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'MAD',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(

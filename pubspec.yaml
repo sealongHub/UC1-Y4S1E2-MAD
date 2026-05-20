@@ -39,7 +39,12 @@ dependencies:
   path_provider: ^2.1.5
   path: ^1.9.1
   sqflite: ^2.4.2+1
+<<<<<<< HEAD
   sqflite_common_ffi: ^2.4.0+3
+=======
+  get: ^4.7.3
+  badges: ^3.2.0
+>>>>>>> ed7e9763c32da740429a5621e54880dbcbbe51cd
 
 dev_dependencies:
   flutter_test:

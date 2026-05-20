@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mad/controller/order_controller.dart';
 import 'package:mad/data/shared_pref_manager.dart';
 import 'package:mad/screen/book_detail_screen.dart';
+import 'package:badges/badges.dart' as badges;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,6 +14,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String _fullName = "Guest";
+
+  final orderController = Get.put(OrderController());
 
   @override
   void initState() {
@@ -91,10 +96,15 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
 
+    final cartItems = badges.Badge(
+      badgeContent: Obx(() => Text("${orderController.orderList.length}")) ,
+      child: Icon(Icons.shopping_cart),
+    );
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        actions: [Icon(Icons.notifications), Icon(Icons.more_vert)],
+        actions: [cartItems, Icon(Icons.more_vert)],
       ),
       body: SafeArea(
         child: ListView(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mad/screen/forget_password_screen.dart';
 import 'package:mad/screen/main_screen.dart';
 import 'package:mad/screen/register_screen.dart';
@@ -286,6 +287,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final skipButton = TextButton(
       onPressed: () {
+<<<<<<< HEAD
 
         final route = MaterialPageRoute(
           builder: (BuildContext context) => MainScreen(),
@@ -293,6 +295,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
         Navigator.pushReplacement(context, route);
 
+=======
+        // final route = MaterialPageRoute(
+        //   builder: (BuildContext context) => MainScreen(),
+        // );
+        // Navigator.pushReplacement(context, route);
+
+        Get.off(MainScreen());
+>>>>>>> ed7e9763c32da740429a5621e54880dbcbbe51cd
       },
       child: Text(
         "រំលង",

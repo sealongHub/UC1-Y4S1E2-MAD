@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mad/screen/login_screen.dart';
 import 'package:mad/widgets/app_logo.dart' as appLogo;
 
@@ -23,8 +24,13 @@ class _StartupScreenState extends State<StartupScreen> {
               backgroundColor: Color(0xFF3051A0)
           ),
           onPressed: (){
-            final route = MaterialPageRoute(builder: (BuildContext context) => LoginScreen());
-            Navigator.pushReplacement(context, route);
+
+            // final route = MaterialPageRoute(builder: (BuildContext context) => LoginScreen());
+            // Navigator.pushReplacement(context, route);
+
+            // Navigation
+            Get.off(LoginScreen());
+
           }, child: Text("ចាប់ផ្តើម", style: TextStyle(color: Colors.white, fontFamily: 'KantumruyPro'),)),
     ),);
 

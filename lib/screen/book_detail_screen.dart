@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mad/controller/order_controller.dart';
 import 'package:mad/model/orders.dart';
 import 'package:mad/service/order_service.dart';
 
@@ -11,6 +13,7 @@ class BookDetailScreen extends StatefulWidget {
 
 class _BookDetailScreenState extends State<BookDetailScreen> {
 
+<<<<<<< HEAD
   Orders? _existingOrder;
   bool _isLoading = true;
 
@@ -18,6 +21,23 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
   void initState() {
     super.initState();
     _checkExistingOrder();
+=======
+  // Dependency Injection
+  final orderController = Get.put(OrderController());
+
+  Future<void> _orderProcess() async{
+    final orderItem = Orders(
+        bookId: 1,
+        qty: 1,
+        amount: 20000,
+        phoneNumber: "01234567",
+        discount : 0,
+        totalAmount: 20000
+    );
+    orderController.orderList.add(orderItem);
+    final snackBar = SnackBar(content: Text("Order success"));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+>>>>>>> ed7e9763c32da740429a5621e54880dbcbbe51cd
   }
 
   // Check if this book is already in cart
