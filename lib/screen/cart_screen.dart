@@ -221,8 +221,7 @@ class _CartScreenState extends State<CartScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "${m.phoneNumber}",
+                            Text("${m.phoneNumber}",
                               style: TextStyle(fontSize: 18),
                             ),
                           ],

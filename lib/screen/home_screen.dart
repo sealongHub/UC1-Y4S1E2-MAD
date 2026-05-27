@@ -45,19 +45,22 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
     final subTitle = Padding(
-      padding: EdgeInsets.only(left: 16, right: 16),
+      padding: EdgeInsets.only(left: 32, right: 16),
       child: Text(
         "What do you want to read today?",
         style: TextStyle(fontSize: 16, color: Colors.black87),
       ),
     );
 
-    List<Widget> menuList = List.generate(50, (i) {
-      return Card(
-        elevation: 3,
-        child: Padding(
-          padding: EdgeInsetsGeometry.all(8),
-          child: Text("ប្រលោមលោក"),
+    List<String> menuArr = ["All", "ប្រលោមលោក","បច្ចេកវិទ្យា","សាសនា"];
+
+    List<Widget> menuList = List.generate(menuArr.length, (i) {
+      return Container(
+        width: 100,
+        child: TextButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.black45),
+          child: Text("${menuArr[i]}", style: TextStyle(color: Colors.white),),
         ),
       );
     });
@@ -72,18 +75,20 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
 
-    List<Widget> booksList = List.generate(30, (i) {
+    List<Widget> booksList = List.generate(3, (i) {
       return GestureDetector(
         child: Padding(
           padding: EdgeInsetsGeometry.all(8),
           child: Image.asset(
-            "assets/images/book2.png",
+            "assets/images/book${i+1}.png",
             height: 250,
             fit: BoxFit.cover,
           ),
         ),
-        onTap: (){
-          final route = MaterialPageRoute(builder: (BuildContext context) => BookDetailScreen());
+        onTap: () {
+          final route = MaterialPageRoute(
+            builder: (BuildContext context) => BookDetailScreen(),
+          );
           Navigator.push(context, route);
         },
       );
@@ -97,25 +102,46 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     final cartItems = badges.Badge(
-      badgeContent: Obx(() => Text("${orderController.orderList.length}")) ,
+      badgeContent: Obx(() => Text("${orderController.orderList.length}")),
       child: Icon(Icons.shopping_cart),
+    );
+
+    final searchWidget = Padding(
+      padding: EdgeInsets.only(left: 16, right: 16, top: 16),
+      child: TextField(
+        decoration: InputDecoration(
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+          hintText: 'Search...',
+          suffixIcon: Icon(Icons.search),
+        ),
+      ),
     );
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        title: title,
         actions: [cartItems, Icon(Icons.more_vert)],
       ),
       body: SafeArea(
         child: ListView(
           children: [
-            title,
             subTitle,
+            searchWidget,
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Text(
+                "Category",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+            ),
             menuListRow,
             booksListRow,
-            Text(
-              "ការមកដល់ថ្មី",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            Padding(
+              padding: EdgeInsets.only(left: 16, right: 16),
+              child: Text(
+                "New Arrival",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
             ),
             booksListRow,
           ],
